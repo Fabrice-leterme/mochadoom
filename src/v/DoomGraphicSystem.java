@@ -18,11 +18,11 @@
 package v;
 
 import f.Wiper;
-import mochadoom.Engine;
 import java.awt.Image;
 import java.awt.Rectangle;
 import m.IRandom;
 import m.Settings;
+import mochadoom.Engine;
 import rr.patch_t;
 import v.graphics.Horizontal;
 import v.graphics.Plotter;
@@ -92,7 +92,7 @@ public interface DoomGraphicSystem<T, V> {
      * Added by _D_. Unsure if I should use VSI objects instead, as they
      * already carry scaling information which doesn't need to be repacked...
      */
-    final int V_NOSCALESTART =      0x00010000;   // dont scale x,y, start coords
+    final int V_NOSCALESTART      = 0x00010000;   // dont scale x,y, start coords
     final int V_SCALESTART        = 0x00020000;   // scale x,y, start coords
     final int V_SCALEPATCH        = 0x00040000;   // scale patch
     final int V_NOSCALEPATCH      = 0x00080000;   // don't scale patch

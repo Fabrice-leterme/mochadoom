@@ -30,6 +30,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import mochadoom.Engine;
 import utils.QuoteType;
 import v.graphics.Plotter;
 import v.renderers.BppMode;
@@ -102,6 +103,7 @@ public enum Settings {
     fullscreen_stretch(FILE_MOCHADOOM, FullscreenOptions.StretchMode.Fit),
     fullscreen_interpolation(FILE_MOCHADOOM, FullscreenOptions.InterpolationMode.Nearest),
     alwaysrun(FILE_MOCHADOOM, false), // Always run is OFF
+    vanilla_key_behavior(FILE_MOCHADOOM, true), // Currently forces LSHIFT on RSHIFT, TODO: layouts, etc 
     automap_plotter_style(FILE_MOCHADOOM, Plotter.Style.Thin), // Thin is vanilla, Thick is scaled, Deep slightly rounded scaled
     enable_colormap_lump(FILE_MOCHADOOM, true), // Enables usage of COLORMAP lump read from wad during lights and specials generation
     color_depth(FILE_MOCHADOOM, BppMode.Indexed), // Indexed: 256, HiColor: 32 768, TrueColor: 16 777 216
@@ -177,6 +179,10 @@ public enum Settings {
     public final Class<?> valueType;
     public final Object defaultValue;
     private Files configBase;
+    
+    public boolean is(Object obj) {
+        return Engine.getConfig().equals(obj);
+    }
     
     public ConfigManager.UpdateStatus hasChange(boolean b) {
         configBase.changed = configBase.changed || b;

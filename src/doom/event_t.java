@@ -289,6 +289,7 @@ public interface event_t {
     final class mouseevent_t implements event_t {
         public volatile evtype_t type;
         public volatile boolean robotMove;
+        public volatile boolean processed = true;
         public volatile int buttons;
         public volatile int x, y;
 
@@ -312,6 +313,14 @@ public interface event_t {
             buttons ^= mouseBits(ev.getButton());
         }
         
+        public void processedNotify() {
+            this.processed = true;
+        }
+        
+        public void resetNotify() {
+            this.processed = false;
+        }
+        
         public void moveIn(MouseEvent ev, int centreX, int centreY, boolean drag) {
             final int mouseX = ev.getX(), mouseY = ev.getY();
             
@@ -324,9 +333,32 @@ public interface event_t {
             if (!drag) {
                 buttons = 0;
             }
-            
-            this.x = (mouseX - centreX) << 2;
-            this.y = (centreY - mouseY) << 2;
+
+            /**
+             * Now also fix for -fasttic mode
+             *  - Good Sign 2017/05/07
+             * 
+             * Fix bug with processing mouse: the DOOM underlying engine does not
+             * react on the event as fast as it came, they are processed in constant time instead.
+             * 
+             * In Mocha Doom, mouse events are not generated in bulks and sent to underlying DOOM engine,
+             * instead the one only mouse event reused and resend modified if was consumed.
+             * 
+             * So, if we have event system reacting faster then DOOM underlying engine,
+             * mouse will be harder to move because the new move is forgotten earlier then processed.
+             * 
+             * As a workaround, do not replace value in moveIn, and increment it instead,
+             * and only when the underlying engine gives signal it has processed event, we clear x and y
+             * 
+             *  - Good Sign 2017/05/06
+             */
+            if (processed) {
+                this.x = (mouseX - centreX) << 2;
+                this.y = (centreY - mouseY) << 2;
+            } else {
+                this.x += (mouseX - centreX) << 2;
+                this.y += (centreY - mouseY) << 2;
+            }
         }
         
         public void moveIn(MouseEvent ev, Robot robot, Point windowOffset, int centreX, int centreY, boolean drag) {

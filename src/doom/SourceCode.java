@@ -24,6 +24,16 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
 @Retention(SOURCE)
 public @interface SourceCode {
     
+    public enum AM_Map {
+        AM_Responder,
+        AM_Ticker,
+        AM_Drawer,
+        AM_Stop;
+        @Documented
+        @Retention(SOURCE) public
+        @interface C { AM_Map value(); }
+    }
+    
     public enum D_Main {
         D_DoomLoop,
         D_ProcessEvents;
@@ -32,7 +42,25 @@ public @interface SourceCode {
         @interface C { D_Main value(); }
     }
     
+    public enum F_Finale {
+        F_Responder,
+        F_Ticker,
+        F_Drawer,
+        F_StartFinale;
+        @Documented
+        @Retention(SOURCE) public
+        @interface C { F_Finale value(); }
+    }
+    
     public enum G_Game {
+        G_BuildTiccmd,
+        G_DoCompleted,
+        G_DoReborn,
+        G_DoLoadLevel,
+        G_DoSaveGame,
+        G_DoPlayDemo,
+        G_PlayerFinishLevel,
+        G_DoNewGame,
         G_PlayerReborn,
         G_CheckSpot,
         G_DeathMatchSpawnPlayer,
@@ -138,6 +166,22 @@ public @interface SourceCode {
         @interface C { M_Random value(); }
     }
     
+    public enum P_Doors {
+        T_VerticalDoor,
+        EV_VerticalDoor,
+        EV_DoDoor,
+        EV_DoLockedDoor,
+        P_SpawnDoorCloseIn30,
+        P_SpawnDoorRaiseIn5Mins,
+        P_InitSlidingDoorFrames,
+        P_FindSlidingDoorType,
+        T_SlidingDoor,
+        EV_SlidingDoor;
+        @Documented
+        @Retention(SOURCE) public
+        @interface C { P_Doors value(); }
+    }
+    
     public enum P_Map {
         P_CheckPosition,
         PIT_CheckThing,
@@ -197,6 +241,23 @@ public @interface SourceCode {
         @interface C { P_Enemy value(); }
     }
     
+    public enum P_Lights {
+        T_FireFlicker,
+        P_SpawnFireFlicker,
+        T_LightFlash,
+        P_SpawnLightFlash,
+        T_StrobeFlash,
+        P_SpawnStrobeFlash,
+        EV_StartLightStrobing,
+        EV_TurnTagLightsOff,
+        EV_LightTurnOn,
+        T_Glow,
+        P_SpawnGlowingLight;
+        @Documented
+        @Retention(SOURCE) public
+        @interface C { P_Lights value(); }
+    }
+    
     public enum P_SaveG {
         P_ArchivePlayers,
         P_UnArchivePlayers,
@@ -209,6 +270,58 @@ public @interface SourceCode {
         @Documented
         @Retention(SOURCE) public
         @interface C { P_SaveG value(); }
+    }
+    
+    public enum P_Setup {
+        P_SetupLevel,
+        P_LoadThings;
+        @Documented
+        @Retention(SOURCE) public
+        @interface C { P_Setup value(); }
+    }
+    
+    public enum P_Spec {
+        P_InitPicAnims,
+        P_SpawnSpecials,
+        P_UpdateSpecials,
+        P_UseSpecialLine,
+        P_ShootSpecialLine,
+        P_CrossSpecialLine,
+        P_PlayerInSpecialSector,
+        twoSided,
+        getSector,
+        getSide,
+        P_FindLowestFloorSurrounding,
+        P_FindHighestFloorSurrounding,
+        P_FindNextHighestFloor,
+        P_FindLowestCeilingSurrounding,
+        P_FindHighestCeilingSurrounding,
+        P_FindSectorFromLineTag,
+        P_FindMinSurroundingLight,
+        getNextSector,
+        EV_DoDonut,
+        P_ChangeSwitchTexture,
+        P_InitSwitchList,
+        T_PlatRaise,
+        EV_DoPlat,
+        P_AddActivePlat,
+        P_RemoveActivePlat,
+        EV_StopPlat,
+        P_ActivateInStasis,
+        EV_DoCeiling,
+        T_MoveCeiling,
+        P_AddActiveCeiling,
+        P_RemoveActiveCeiling,
+        EV_CeilingCrushStop,
+        P_ActivateInStasisCeiling,
+        T_MovePlane,
+        EV_BuildStairs,
+        EV_DoFloor,
+        T_MoveFloor,
+        EV_Teleport;
+        @Documented
+        @Retention(SOURCE) public
+        @interface C { P_Spec value(); }
     }
     
     public enum P_Ceiling {
@@ -266,6 +379,25 @@ public @interface SourceCode {
         @interface C { P_Pspr value(); }
     }
     
+    public enum R_Data {
+        R_GetColumn,
+        R_InitData,
+        R_PrecacheLevel,
+        R_FlatNumForName,
+        R_TextureNumForName,
+        R_CheckTextureNumForName;
+        @Documented
+        @Retention(SOURCE) public
+        @interface C { R_Data value(); }
+    }
+    
+    public enum R_Draw {
+        R_FillBackScreen;
+        @Documented
+        @Retention(SOURCE) public
+        @interface C { R_Draw value(); }
+    }
+    
     public enum R_Main {
         R_PointOnSide,
         R_PointOnSegSide,
@@ -283,6 +415,17 @@ public @interface SourceCode {
         @interface C { R_Main value(); }
     }
     
+    public enum ST_Stuff {
+        ST_Responder,
+        ST_Ticker,
+        ST_Drawer,
+        ST_Start,
+        ST_Init;
+        @Documented
+        @Retention(SOURCE) public
+        @interface C { ST_Stuff value(); }
+    }
+    
     public enum W_Wad {
         W_InitMultipleFiles,
         W_Reload,
@@ -295,6 +438,21 @@ public @interface SourceCode {
         @Documented
         @Retention(SOURCE) public
         @interface C { W_Wad value(); }
+    }
+    
+    public enum WI_Stuff {
+        WI_initVariables,
+        WI_loadData,
+        WI_initDeathmatchStats,
+        WI_initAnimatedBack,
+        WI_initNetgameStats,
+        WI_initStats,
+        WI_Ticker,
+        WI_Drawer,
+        WI_Start;
+        @Documented
+        @Retention(SOURCE) public
+        @interface C { WI_Stuff value(); }
     }
     
     public interface D_Think {
@@ -352,12 +510,12 @@ public @interface SourceCode {
 
     @Documented
     @Retention(SOURCE)
-    @Target({FIELD, LOCAL_VARIABLE, PARAMETER})
+    @Target({METHOD, FIELD, LOCAL_VARIABLE, PARAMETER})
     public @interface angle_t {}
     
     @Documented
     @Retention(SOURCE)
-    @Target({FIELD, LOCAL_VARIABLE, PARAMETER})
+    @Target({METHOD, FIELD, LOCAL_VARIABLE, PARAMETER})
     public @interface fixed_t {}
     
     @Documented

@@ -174,6 +174,8 @@ import static data.Defines.*;
 import static data.Limits.*;
 import static data.Tables.*;
 import doom.DoomMain;
+import doom.SourceCode.AM_Map;
+import static doom.SourceCode.AM_Map.AM_Responder;
 import static doom.englsh.*;
 import doom.event_t;
 import doom.evtype_t;
@@ -326,8 +328,7 @@ public class Map<T, V> implements IAutoMap<T, V> {
     public Map(final DoomMain<T, V> DOOM) {
         // Some initializing...
         this.DOOM = DOOM;
-        this.markpoints = new mpoint_t[AM_NUMMARKPOINTS];
-        Arrays.setAll(markpoints, i -> new mpoint_t());
+        this.markpoints = malloc(mpoint_t::new, mpoint_t[]::new, AM_NUMMARKPOINTS);
 
         f_oldloc = new mpoint_t();
         m_paninc = new mpoint_t();
@@ -894,6 +895,7 @@ public class Map<T, V> implements IAutoMap<T, V> {
      */
 
     @Override
+    @AM_Map.C(AM_Responder)
     public final boolean Responder(event_t ev) {
         boolean rc;
         rc = false;

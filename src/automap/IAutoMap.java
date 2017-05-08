@@ -1,5 +1,8 @@
 package automap;
 
+import doom.SourceCode.AM_Map;
+import static doom.SourceCode.AM_Map.AM_Responder;
+import static doom.SourceCode.AM_Map.AM_Stop;
 import doom.event_t;
 
 public interface IAutoMap<T,V> {
@@ -27,10 +30,11 @@ public interface IAutoMap<T,V> {
     public final int GRIDRANGE   =0;
     
     // Called by main loop.
-    public boolean Responder (event_t ev);
+    @AM_Map.C(AM_Responder)
+    public boolean Responder(event_t ev);
 
     // Called by main loop.
-    public void Ticker ();
+    public void Ticker();
 
     // Called by main loop,
     // called instead of view drawer if automap active.
@@ -41,7 +45,8 @@ public interface IAutoMap<T,V> {
 
     // Called to force the automap to quit
     // if the level is completed while it is up.
-    public void  Stop ();
+    @AM_Map.C(AM_Stop)
+    public void Stop();
 
     public void Start();
 }
