@@ -9,3 +9,4 @@
 *.jar
 build.xml
 /nbproject/
+/bin/

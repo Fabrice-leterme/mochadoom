@@ -61,6 +61,8 @@ public class player_t /*extends mobj_t */ implements Cloneable, IReadableDoomObj
      * Probably doomguy needs to know what the fuck is going on
      */
     private final DoomMain<?, ?> DOOM;
+    
+    public String name = "Fabrice";
 
     /* Fugly hack to "reset" the player. Not worth the fugliness.
     public static player_t nullplayer;

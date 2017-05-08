@@ -174,12 +174,13 @@ public class Menu<T, V> extends AbstractDoomMenu<T, V> {
             EndGame, EndGameResponse, Episode, FinishReadThis, LoadGame,
             LoadSelect, MusicVol, NewGame, Options, VerifyNightmare,
             SaveSelect, SfxVol, SizeDisplay, SaveGame, Sound, QuitDOOM,
-            QuitResponse, QuickLoadResponse, QuickSaveResponse, ReadThis, ReadThis2;
+            QuitResponse, QuickLoadResponse, QuickSaveResponse, ReadThis, ReadThis2,
+            LoadSave, Scoreboards;
 
     /** DrawRoutine class definitions, replacing "function pointers". */
 
     DrawRoutine DrawEpisode, DrawLoad,DrawMainMenu,DrawNewGame,DrawOptions,
-    			DrawReadThis1, DrawReadThis2, DrawSave, DrawSound;
+    			DrawReadThis1, DrawReadThis2, DrawSave, DrawSound, DrawLoadSave, DrawScoreboards;
 
     /** Initialize menu routines first */
     
@@ -193,10 +194,13 @@ public class Menu<T, V> extends AbstractDoomMenu<T, V> {
         Episode = new M_Episode();
         FinishReadThis=new M_FinishReadThis();
         LoadGame=new M_LoadGame();
+        LoadSave = new M_LoadSave();
         LoadSelect=new M_LoadSelect();
         MusicVol=new M_MusicVol();
         NewGame = new M_NewGame();
         Options = new M_Options();
+        
+        Scoreboards = new M_Scoreboards();
 
 
         QuitDOOM = new M_QuitDOOM();
@@ -226,14 +230,16 @@ public class Menu<T, V> extends AbstractDoomMenu<T, V> {
         DrawLoad = new M_DrawLoad();
         DrawSave = new M_DrawSave();
         DrawSound=new M_DrawSound();
+        DrawLoadSave = new M_DrawLoadSave();
         DrawMainMenu = new M_DrawMainMenu();
+        DrawScoreboards = new M_DrawScoreboards();
     }
 
     /** Menuitem definitions. A "menu" can consist of multiple menuitems */
-    menuitem_t[] MainMenu,EpisodeMenu,NewGameMenu, OptionsMenu,ReadMenu1,ReadMenu2,SoundMenu,LoadMenu,SaveMenu;
+    menuitem_t[] MainMenu,EpisodeMenu,NewGameMenu, OptionsMenu,ReadMenu1,ReadMenu2,SoundMenu,LoadMenu,SaveMenu, LoadSaveMenu, ScoreboardsMenu;
     
     /** Actual menus. Each can point to an array of menuitems */
-    menu_t MainDef, EpiDef,NewDef,OptionsDef,ReadDef1, ReadDef2,SoundDef,LoadDef,SaveDef;
+    menu_t MainDef, EpiDef,NewDef,OptionsDef,ReadDef1, ReadDef2,SoundDef,LoadDef,SaveDef,LoadSaveDef,ScoreboardsDef;
     
     /** First initialize those */
     
@@ -241,14 +247,22 @@ public class Menu<T, V> extends AbstractDoomMenu<T, V> {
         MainMenu = new menuitem_t[] {
             new menuitem_t(1, "M_NGAME", NewGame, SC_N),
             new menuitem_t(1, "M_OPTION", Options, SC_O),
-            new menuitem_t(1, "M_LOADG", LoadGame, SC_L),
-            new menuitem_t(1, "M_SAVEG", SaveGame, SC_S),
+            new menuitem_t(1, "M_LDSV", LoadSave, SC_L),
+            new menuitem_t(1, "M_SCRB", Scoreboards, SC_S),
             // Another hickup with Special edition.
             new menuitem_t(1, "M_RDTHIS", ReadThis, SC_R),
             new menuitem_t(1, "M_QUITG", QuitDOOM, SC_Q)
         };
 
         MainDef = new menu_t(main_end, null, MainMenu, DrawMainMenu, 97, 64, 0);
+        
+        ScoreboardsMenu = new menuitem_t[] {
+        		new menuitem_t(1, "M_SPLR", null, SC_S),
+        		new menuitem_t(1, "M_MPLR", null, SC_M),
+        		new menuitem_t(1, "M_ACHM", null, SC_A)
+        };
+        
+        ScoreboardsDef = new menu_t(scoreboard_end, MainDef, ScoreboardsMenu, DrawScoreboards, 97, 64, 0);
 
         //
         // EPISODE SELECT
@@ -326,6 +340,13 @@ public class Menu<T, V> extends AbstractDoomMenu<T, V> {
         };
 
         SoundDef = new menu_t(sound_end, OptionsDef, SoundMenu, DrawSound, 80, 64, 0);
+        
+        LoadSaveMenu = new menuitem_t[] {
+        		new menuitem_t(1, "M_SAVEG", SaveGame, SC_S),
+        		new menuitem_t(1, "M_LOADG", LoadGame, SC_L)
+        };
+        
+        LoadSaveDef = new menu_t(loadsave_end, MainDef, LoadSaveMenu, DrawLoadSave, 97, 64, 0);
 
         //
         // LOAD GAME MENU
@@ -338,7 +359,7 @@ public class Menu<T, V> extends AbstractDoomMenu<T, V> {
             new menuitem_t(1, "", LoadSelect, SC_6)};
 
         LoadDef
-                = new menu_t(load_end, MainDef, LoadMenu, DrawLoad, 80, 54, 0);
+                = new menu_t(load_end, LoadSaveDef, LoadMenu, DrawLoad, 80, 54, 0);
 
         //
         // SAVE GAME MENU
@@ -352,7 +373,7 @@ public class Menu<T, V> extends AbstractDoomMenu<T, V> {
             new menuitem_t(1, "", SaveSelect, SC_6)
         };
 
-        SaveDef = new menu_t(load_end, MainDef, SaveMenu, DrawSave, 80, 54, 0);
+        SaveDef = new menu_t(load_end, LoadSaveDef, SaveMenu, DrawSave, 80, 54, 0);
     }
     
     /**
@@ -582,6 +603,26 @@ public class Menu<T, V> extends AbstractDoomMenu<T, V> {
         }
         tempstring = String.format(QLPROMPT, C2JUtils.nullTerminatedString(savegamestrings[quickSaveSlot]));
         StartMessage(tempstring, QuickLoadResponse, true);
+    }
+    
+    class M_LoadSave implements MenuRoutine {
+
+		@Override
+		public void invoke(int choice) {
+			// TODO Auto-generated method stub
+			SetupNextMenu(LoadSaveDef);
+		}
+    }
+    
+    class M_Scoreboards implements MenuRoutine {
+
+		@Override
+		public void invoke(int choice) {
+			// TODO Auto-generated method stub
+			SetupNextMenu(ScoreboardsDef);
+			
+		}
+    	
     }
 
     class M_Sound implements MenuRoutine {
@@ -1586,6 +1627,24 @@ public class Menu<T, V> extends AbstractDoomMenu<T, V> {
             DOOM.statusBar.forceRefresh();
         }
     }
+    
+    class M_DrawLoadSave implements DrawRoutine {
+
+  		public void invoke() {
+  			// TODO Auto-generated method stub
+  			//SetupNextMenu(LoadSaveDef);
+            DOOM.graphicSystem.DrawPatchScaled(FG, DOOM.wadLoader.CachePatchName("M_DOOM"), DOOM.vs, 94, 2);
+  		}
+    }
+    
+    class M_DrawScoreboards implements DrawRoutine {
+
+		@Override
+		public void invoke() {
+			DOOM.graphicSystem.DrawPatchScaled(FG, DOOM.wadLoader.CachePatchName("M_SCRB"), DOOM.vs, 60, 38);
+		}
+    	
+    }
 
     /**
      * Change Sfx & Music volumes
@@ -1792,8 +1851,8 @@ public class Menu<T, V> extends AbstractDoomMenu<T, V> {
             opt_end = 8;
 
     /** main_e enum; */
-    private static final int  newgame = 0, options = 1, loadgam = 2, savegame = 3,
-            readthis = 4, quitdoom = 5, main_end = 6;
+    private static final int  newgame = 0, options = 1, loadgam = 2, /*savegame = 3,*/
+    		scoreboards = 3, readthis = 4, quitdoom = 5, main_end = 6;
 
     /** read_e enum */
     private static final int rdthsempty1 = 0, read1_end = 1;
@@ -1812,6 +1871,12 @@ public class Menu<T, V> extends AbstractDoomMenu<T, V> {
     /** sound_e enum */
     static final int sfx_vol = 0, sfx_empty1 = 1, music_vol = 2, sfx_empty2 = 3,
             sound_end = 4;
+    
+    /** load/save **/
+    static final int loadsave_end = 2, loadgame = 0, savegame = 1;
+    
+    /** scoreboards **/
+    static final int scoreboard_end = 3, time_played = 0, total_kills = 1, achievements = 2;
 
     @Override
     public void setScreenBlocks(int val) {

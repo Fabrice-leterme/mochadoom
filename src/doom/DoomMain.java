@@ -116,13 +116,6 @@ import w.WadLoader;
 //
 //-----------------------------------------------------------------------------
 
-@SuppressWarnings({
-    "UseOfSystemOutOrSystemErr",
-    "MalformedFormatString",
-    "CallToPrintStackTrace",
-    "override",
-    "StringBufferMayBeStringBuilder"
-})
 public class DoomMain<T, V> extends DoomStatus<T, V> implements IDoomGameNetworking, IDoomGame, IDoom {
 
     public static final String RCSID = "$Id: DoomMain.java,v 1.109 2012/11/06 16:04:58 velktron Exp $";

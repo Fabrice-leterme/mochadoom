@@ -1249,7 +1249,6 @@ public class EndLevel<T, V> extends AbstractEndLevel {
 
         updateAnimatedBack();
 
-        //System.out.println("SP_State "+sp_state);
         if ((acceleratestage != 0) && sp_state != COUNT_DONE) {
             acceleratestage = 0;
             cnt_kills[0] = (plrs[me].skills * 100) / wbs.maxkills;
@@ -1335,7 +1334,6 @@ public class EndLevel<T, V> extends AbstractEndLevel {
                 cnt_pause = TICRATE;
             }
         }
-
     }
 
     protected void drawStats() {
